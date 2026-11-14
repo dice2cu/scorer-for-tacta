@@ -1,0 +1,12 @@
+training-data/
+out/
+temp/
+
+# Python build-time tooling environment
+tooling/.venv/
+__pycache__/
+*.pyc
+
+# Node / web
+node_modules/
+dist/

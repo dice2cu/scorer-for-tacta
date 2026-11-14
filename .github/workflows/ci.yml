@@ -1,0 +1,38 @@
+# Build and test the app on pull requests (and on pushes to main).
+# The tests use the small committed data set in tests/fixtures/ (out/ isn't in the repo);
+# the browser checks use the runner's preinstalled Google Chrome, with WebGL on SwiftShader.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install
+        run: npm ci
+      - name: Type check
+        run: npm run typecheck
+      - name: Build
+        run: npm run build
+      - name: Unit tests (engine vs PyTorch, scoring vs Python)
+        run: npm test
+      - name: Browser smoke test
+        run: node tests/browser/smoke.mjs --gpu swiftshader
+      - name: Offline check
+        run: node tests/browser/offline-check.mjs

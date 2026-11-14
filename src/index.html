@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Counts each player's visible dots in a photo of a finished Tacta game.">
+  <title>Scorer for Tacta</title>
+  <meta name="theme-color" content="#f4f2ee" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141416" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="./styles.css">
+  <script type="module" src="./app/main.ts"></script>
+</head>
+<body>
+  <header class="top">
+    <h1><img src="/icon.svg" alt="" width="28" height="28"> Scorer for Tacta</h1>
+  </header>
+
+  <main>
+    <section id="start" class="panel">
+      <p class="lead">Take a photo of the finished game and the app counts every player's visible dots.</p>
+      <label class="btn primary big" id="pick">
+        <input type="file" accept="image/*" id="file" class="visually-hidden">
+        Take or choose a photo
+      </label>
+      <ul class="tips">
+        <li>Get the whole board in the frame, as straight from above as you can.</li>
+        <li>Use even light and avoid bright glare on the cards.</li>
+        <li>Nothing to set up: card colours and size are found automatically.</li>
+      </ul>
+      <p id="status" class="muted small" role="status">Loading…</p>
+    </section>
+
+    <section id="busy" class="panel center" hidden>
+      <div class="spinner" aria-hidden="true"></div>
+      <p id="progress" role="status">Working…</p>
+    </section>
+
+    <section id="error" class="panel" hidden>
+      <p class="error-text" id="error-text"></p>
+      <label class="btn primary">
+        <input type="file" accept="image/*" class="visually-hidden" data-pick>
+        Try another photo
+      </label>
+    </section>
+
+    <section id="results" hidden>
+      <div class="panel">
+        <table class="scores" id="scores" aria-label="Scores"></table>
+        <ul class="notes" id="notes"></ul>
+      </div>
+
+      <figure class="viewer">
+        <canvas id="view" aria-label="Your photo with every counted dot circled"></canvas>
+        <div class="toast" id="toast" role="status" hidden></div>
+      </figure>
+      <div class="legend small">
+        <span><i class="key counted"></i>counted</span>
+        <span><i class="key partial"></i>partly covered, not counted</span>
+        <span><i class="key review"></i>not counted, check it</span>
+        <span><i class="key off"></i>you turned it off</span>
+      </div>
+      <p class="hint small">Tap a dot to stop or start counting it. Tap a missed dot on a card to add it.
+        Pinch to zoom.</p>
+      <div class="row">
+        <label class="check"><input type="checkbox" id="marks" checked> Show marks</label>
+        <button class="btn" id="reset" disabled>Undo my changes</button>
+      </div>
+      <label class="btn primary block">
+        <input type="file" accept="image/*" class="visually-hidden" data-pick>
+        Score another photo
+      </label>
+
+      <details class="panel details">
+        <summary>Details</summary>
+        <ul id="details" class="small"></ul>
+      </details>
+    </section>
+
+    <details class="panel details" id="advanced">
+      <summary>Advanced</summary>
+      <label class="check small"><input type="checkbox" id="use-gpu" checked> Use the GPU (much faster)</label>
+      <p class="small muted">Turn this off if the circles land in the wrong places or the counts are far off.
+        Some phones' GPUs give wrong results; without it, scoring takes longer but works on every device.</p>
+      <button class="btn" id="rescore" hidden>Score this photo again</button>
+    </details>
+  </main>
+
+  <footer class="small muted">Runs entirely on your device. Photos are never uploaded.</footer>
+</body>
+</html>
